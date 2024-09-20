@@ -25,6 +25,7 @@
 		"fastify": "^4.28.1",
 		"get-port": "^7.1.0",
 		"isbot": "^4",
+		"minio": "^8.0.1",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"source-map-support": "^0.5.21"
@@ -47,5 +48,10 @@
 		"vite-tsconfig-paths": "^5.0.1",
 		"vitest": "^2.1.1"
 	},
-	"keywords": ["react", "remix", "javascript", "typescript"]
+	"keywords": [
+		"react",
+		"remix",
+		"javascript",
+		"typescript"
+	]
 }
