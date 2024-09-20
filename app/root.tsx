@@ -44,7 +44,6 @@ export const loader = async (args: LoaderFunctionArgs) => {
 };
 
 export default function App() {
-	const data = useLoaderData<typeof loader>();
 	return (
 		<html lang="en">
 			<head>
@@ -53,16 +52,6 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
-				<h1>FileUpload</h1>
-				<Form method="post" encType="multipart/form-data">
-					<input type="file" name="file" />
-					<button type="submit">Upload</button>
-				</Form>
-				<audio controls src={data.fileUrl}>
-					<source src={data.fileUrl} type="audio/mp3" />
-					Your browser does not support the audio element.
-					<track kind="captions" src="" srcLang="en" label="English Captions" />
-				</audio>
 				<Outlet />
 				<Scripts />
 			</body>
