@@ -2,30 +2,45 @@ version: '3.8'
 
 services:
 
-  home:
-    image: bpasco/production:home
-    platform: linux/amd64
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.home.rule=HOST(`benpas.eu`)"
-      - "traefik.http.routers.home.entrypoints=websecure"
-      - "traefik.http.routers.home.tls.certresolver=myresolver"
-      - "traefik.http.services.home.loadbalancer.server.port=8000"
-      - "com.centurylinklabs.watchtower.enable=true"
-    environment:
-      - HOST=true
-      - NODE_ENV=production
-      - PORT=8000
-    deploy:
-      mode: replicated
-      replicas: 2
-    networks:
-      - traefik-net
+  # home:
+  #   image: bpasco/production:home
+  #   platform: linux/amd64
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.home.rule=HOST(`benpas.eu`)"
+  #     - "traefik.http.routers.home.entrypoints=websecure"
+  #     - "traefik.http.routers.home.tls.certresolver=myresolver"
+  #     - "traefik.http.services.home.loadbalancer.server.port=8000"
+  #     - "com.centurylinklabs.watchtower.enable=true"
+  #   environment:
+  #     - HOST=true
+  #     - NODE_ENV=production
+  #     - PORT=8000
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 2
+  #   networks:
+  #     - traefik-net
 
-networks:
-  traefik-net:
-    driver: bridge
-    external: true
+  object_storage:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    command: server /data --console-address ":9001"
+    volumes:
+      - object_storage:/data
 
 volumes:
-  letsencrypt:
+  object_storage:
+
+# networks:
+#   traefik-net:
+#     driver: bridge
+#     external: true
+
+# volumes:
+#   letsencrypt:
