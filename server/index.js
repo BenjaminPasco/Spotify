@@ -4,8 +4,11 @@ import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
 import getPort, { portNumbers } from "get-port";
 import sourceMapSupport from "source-map-support";
+
 installGlobals();
 sourceMapSupport.install();
+
+// Initaliazing the Fastify backend
 const app = fastify({
 	logger: {
 		level: process.env.NODE_ENV ? "info" : "error",
