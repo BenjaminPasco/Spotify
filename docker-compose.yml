@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+
+  home:
+    image: bpasco/production:home
+    platform: linux/amd64
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.home.rule=HOST(`benpas.eu`)"
+      - "traefik.http.routers.home.entrypoints=websecure"
+      - "traefik.http.routers.home.tls.certresolver=myresolver"
+      - "traefik.http.services.home.loadbalancer.server.port=8000"
+      - "com.centurylinklabs.watchtower.enable=true"
+    environment:
+      - HOST=true
+      - NODE_ENV=production
+      - PORT=8000
+    deploy:
+      mode: replicated
+      replicas: 2
+    networks:
+      - traefik-net
+
+networks:
+  traefik-net:
+    driver: bridge
+    external: true
+
+volumes:
+  letsencrypt:

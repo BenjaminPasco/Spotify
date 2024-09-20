@@ -1,0 +1,27 @@
+name: Perform check on pull request
+
+on:
+  pull_request:
+    branches:
+      - production
+      - staging
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      run: |
+        npm install -g pnpm
+        pnpm install
+    - name: Check
+      run: pnpm run check
+    - name: Build project
+      run: pnpm run build

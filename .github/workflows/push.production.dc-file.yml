@@ -1,0 +1,28 @@
+name: Update docker compose file on production
+
+on:
+  push:
+    branches:
+      - production
+    paths:
+      - 'docker-compose.yml'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Copy docker compose file
+        run: |
+          mkdir -p /home/runner/.ssh
+          touch /home/runner/.ssh/id_rsa
+          echo "${{ secrets.PRODUCTION_SSH }}" > /home/runner/.ssh/id_rsa
+          chmod 600 /home/runner/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+          ssh ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }} "mkdir -p ~/home"
+          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }}:~/home/docker-compose.yml
+          ssh ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }} "cd ~/home && docker compose down"
+          ssh ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }} "cd ~/home && docker network create traefik-net || true"
+          ssh ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }} "cd ~/home && docker compose up -d"

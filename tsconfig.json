@@ -1,0 +1,53 @@
+{
+	"url": "https://json.schemastore.org/tsconfig.json",
+	"include": ["**/*.ts", "**/*.tsx"],
+	"compilerOptions": {
+		/* Base Options: */
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "ES2022",
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"moduleDetection": "force",
+		"isolatedModules": true,
+		// "verbatimModuleSyntax": true,
+
+		/* Strictness */
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"forceConsistentCasingInFileNames": true,
+
+		/* If transpiling with Typescript: */
+		// "module": "NodeNext",
+		// "outDir": "dist",
+		// "sourceMap": true,
+
+		/* And if you are building for a library: */
+		// "declaration": true,
+
+		/* And if you are building for a library in a monorepo: */
+		// "composite": true,
+		// "declarationMap": true,
+
+		/* If NOT transpiling with Typescript: */
+		// "module": "Preserve",
+		"noEmit": true, // Remix takes care of building everything in `remix build`.
+
+		/* If your code runs in the DOM: */
+		"lib": ["DOM", "DOM.Iterable", "ES2022"],
+
+		/* If your code does not run in the DOM: */
+		// "lib": ["ES2022"],
+
+		/* Other attributes not talk about by Matt Pocock's cheat sheet */
+		"types": ["@remix-run/node", "vite/client"],
+		"jsx": "react-jsx",
+		"moduleResolution": "Bundler",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./app/*"]
+		},
+		"module": "ESNext"
+	}
+}
