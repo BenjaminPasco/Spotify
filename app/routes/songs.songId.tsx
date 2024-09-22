@@ -1,6 +1,6 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { minioClient } from "utils/minio";
+import { minioClient } from "../clients/minio";
 
 export const loader = async (args: LoaderFunctionArgs) => {
 	const statObject = await minioClient.statObject("music", "music.mp3");
