@@ -1,24 +1,10 @@
-import {
-	type ActionFunctionArgs,
-	type LoaderFunctionArgs,
-	json,
-} from "@remix-run/node";
-import {
-	Form,
-	Links,
-	Meta,
-	Outlet,
-	Scripts,
-	useLoaderData,
-} from "@remix-run/react";
-import interStyles from "/fonts/inter.css?url";
-import { minioClient } from "./clients/minio";
+import { Links, Meta, Outlet, Scripts } from "@remix-run/react";
 import styles from "./tailwind.css?url";
 
 export function links() {
 	return [
-		{ rel: "stylesheet", href: interStyles },
 		{ rel: "stylesheet", href: styles },
+		{ rel: "stylesheet", href: "/fonts/inter.css" },
 	];
 }
 
