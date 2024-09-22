@@ -41,7 +41,7 @@
 		// "lib": ["ES2022"],
 
 		/* Other attributes not talk about by Matt Pocock's cheat sheet */
-		"types": ["@remix-run/node", "vite/client"],
+		"types": ["@remix-run/node", "vite/client", "@types/pg"],
 		"jsx": "react-jsx",
 		"moduleResolution": "Bundler",
 		"baseUrl": ".",
