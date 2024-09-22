@@ -2,25 +2,26 @@ version: '3.8'
 
 services:
 
-  # home:
-  #   image: bpasco/production:home
-  #   platform: linux/amd64
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.home.rule=HOST(`benpas.eu`)"
-  #     - "traefik.http.routers.home.entrypoints=websecure"
-  #     - "traefik.http.routers.home.tls.certresolver=myresolver"
-  #     - "traefik.http.services.home.loadbalancer.server.port=8000"
-  #     - "com.centurylinklabs.watchtower.enable=true"
-  #   environment:
-  #     - HOST=true
-  #     - NODE_ENV=production
-  #     - PORT=8000
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 2
-  #   networks:
-  #     - traefik-net
+  spotify:
+    image: bpasco/production:spotify
+    platform: linux/amd64
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spotify.rule=HOST(`spotify.benpas.eu`)"
+      - "traefik.http.routers.spotify.entrypoints=websecure"
+      - "traefik.http.routers.spotify.tls.certresolver=myresolver"
+      - "traefik.http.services.spotify.loadbalancer.server.port=8000"
+      - "com.centurylinklabs.watchtower.enable=true"
+    environment:
+      - HOST=true
+      - NODE_ENV=production
+      - PORT=8000
+    deploy:
+      mode: replicated
+      replicas: 2
+    networks:
+      - traefik-net
+      - spotify
 
   object_storage:
     image: minio/minio
@@ -33,6 +34,8 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - object_storage:/data
+    networks:
+      - spotify
 
   db:
     image: postgres:alpine
@@ -44,15 +47,15 @@ services:
       POSTGRES_DB: mydatabase
     volumes:
       - postgres_data:/var/lib/postgres/data
+    networks:
+      - spotify
 
 volumes:
   object_storage:
   postgres_data:
 
-# networks:
-#   traefik-net:
-#     driver: bridge
-#     external: true
-
-# volumes:
-#   letsencrypt:
+networks:
+  traefik-net:
+    driver: bridge
+    external: true
+  spotify:
