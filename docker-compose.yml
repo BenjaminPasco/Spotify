@@ -34,8 +34,20 @@ services:
     volumes:
       - object_storage:/data
 
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+
 volumes:
   object_storage:
+  postgres_data:
 
 # networks:
 #   traefik-net:
