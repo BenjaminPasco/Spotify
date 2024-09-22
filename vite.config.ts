@@ -4,4 +4,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	plugins: [vitePlugin(), tsconfigPaths()],
+	css: {
+		modules: {
+			scopeBehaviour: "local",
+		},
+	},
 });

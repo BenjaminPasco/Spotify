@@ -1,4 +1,12 @@
 import { Links, Meta, Outlet, Scripts } from "@remix-run/react";
+import styles from "./tailwind.css?url";
+
+export function links() {
+	return [
+		{ rel: "stylesheet", href: styles },
+		{ rel: "stylesheet", href: "/fonts/inter.css" },
+	];
+}
 
 export default function App() {
 	return (
@@ -9,7 +17,6 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
-				<h1>Test if new image is picked up</h1>
 				<Outlet />
 				<Scripts />
 			</body>

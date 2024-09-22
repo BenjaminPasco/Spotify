@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
 
-  home:
-    image: bpasco/production:home
+  spotify:
+    image: bpasco/production:spotify
     platform: linux/amd64
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.home.rule=HOST(`benpas.eu`)"
-      - "traefik.http.routers.home.entrypoints=websecure"
-      - "traefik.http.routers.home.tls.certresolver=myresolver"
-      - "traefik.http.services.home.loadbalancer.server.port=8000"
+      - "traefik.http.routers.spotify.rule=HOST(`spotify.benpas.eu`)"
+      - "traefik.http.routers.spotify.entrypoints=websecure"
+      - "traefik.http.routers.spotify.tls.certresolver=myresolver"
+      - "traefik.http.services.spotify.loadbalancer.server.port=8000"
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       - HOST=true
@@ -21,11 +21,41 @@ services:
       replicas: 2
     networks:
       - traefik-net
+      - spotify
+
+  object_storage:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    command: server /data --console-address ":9001"
+    volumes:
+      - object_storage:/data
+    networks:
+      - spotify
+
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    networks:
+      - spotify
+
+volumes:
+  object_storage:
+  postgres_data:
 
 networks:
   traefik-net:
     driver: bridge
     external: true
-
-volumes:
-  letsencrypt:
+  spotify:
