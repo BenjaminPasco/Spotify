@@ -6,7 +6,6 @@ on:
       - production
     paths:
       - 'docker-compose.yml'
-      - './.github/workflows/push.production.dc-file.yml'
 
 jobs:
   update:
