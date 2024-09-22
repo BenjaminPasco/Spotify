@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Copy docker compose file
         run: |
-          mkdir -p /spotify/runner/.ssh
-          touch /spotify/runner/.ssh/id_rsa
-          echo "${{ secrets.PRODUCTION_SSH }}" > /spotify/runner/.ssh/id_rsa
-          chmod 600 /spotify/runner/.ssh/id_rsa
+          mkdir -p /home/runner/.ssh
+          touch /home/runner/.ssh/id_rsa
+          echo "${{ secrets.PRODUCTION_SSH }}" > /home/runner/.ssh/id_rsa
+          chmod 600 /home/runner/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
           ssh ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }} "mkdir -p ~/spotify"
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION_HOST }}:~/spotify/docker-compose.yml
