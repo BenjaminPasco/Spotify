@@ -11,37 +11,16 @@ import {
 	Scripts,
 	useLoaderData,
 } from "@remix-run/react";
-import { ensureBucketExists, minioClient } from "utils/minio";
+import interStyles from "/fonts/inter.css?url";
+import { minioClient } from "./clients/minio";
+import styles from "./tailwind.css?url";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-	const formData = await request.formData();
-	const file = formData.get("file");
-	if (file && file instanceof File) {
-		const buffer = await file.arrayBuffer();
-
-		await ensureBucketExists("music");
-		await minioClient.putObject(
-			"music",
-			file.name,
-			Buffer.from(buffer),
-			file.size,
-			{ "Content-Type": file.type },
-		);
-
-		return json({ succes: true, message: "File upload success" });
-	}
-	return json({ succes: false, message: "File upload failed" });
-};
-
-export const loader = async (args: LoaderFunctionArgs) => {
-	const statObject = await minioClient.statObject("music", "music.mp3");
-	const fileUrl = await minioClient.presignedGetObject(
-		"music",
-		"music.mp3",
-		60 * 60,
-	);
-	return json({ success: true, fileUrl });
-};
+export function links() {
+	return [
+		{ rel: "stylesheet", href: interStyles },
+		{ rel: "stylesheet", href: styles },
+	];
+}
 
 export default function App() {
 	return (
