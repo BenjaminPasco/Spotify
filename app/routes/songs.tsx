@@ -1,0 +1,40 @@
+import { type LoaderFunctionArgs, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import * as dbClient from "../clients/database";
+import * as minioClient from "../clients/minio";
+
+export const loader = async (args: LoaderFunctionArgs) => {
+	const { rows } = await dbClient.getAllMusicMetadata();
+	const musics = await Promise.all(
+		rows.map(async (row) => {
+			const link = await minioClient.getMusicLink({
+				bucket: "music",
+				objectStorageId: row.objectStorageId,
+			});
+			return {
+				...row,
+				link,
+			};
+		}),
+	);
+	return json({ success: true, musics });
+};
+
+export default function Songs() {
+	const { musics } = useLoaderData<typeof loader>();
+	return (
+		<>
+			{musics.map((music) => {
+				return (
+					<div key={music.objectStorageId}>
+						<audio controls>
+							<source src={music.link} type="audio/mpeg" />
+							<track kind="captions" srcLang="en" label="English" default />
+							Your Browser does not support the audio element.
+						</audio>
+					</div>
+				);
+			})}
+		</>
+	);
+}

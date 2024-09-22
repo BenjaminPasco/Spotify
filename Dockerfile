@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ RUN pnpm run build
 
 RUN pnpm prune --production
 
-FROM node:20-alpine AS production
+FROM node:alpine AS production
 
 WORKDIR /usr/src/app
 

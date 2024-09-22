@@ -51,4 +51,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: bpasco/production:home
+        tags: bpasco/production:spotify
