@@ -1,7 +1,13 @@
 import pg from "pg";
 const { Pool } = pg;
 
-const connectionUrl = "postgres://user:password@localhost:5432/mydatabase";
+const dbUser = process.env.DB_USER || "user";
+const dbPassword = process.env.DB_PASSWORD || "password";
+const dbHost = process.env.DB_HOST || "127.0.0.1";
+const dbPort = process.env.DB_PORT || 5432;
+const dbName = process.env.DB_NAME || "spotify";
+
+const connectionUrl = `postgres://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
 const pool = new Pool({
 	connectionString: connectionUrl,
 });
@@ -30,10 +36,13 @@ async function initClient() {
 	try {
 		await pool.connect();
 		await pool.query(createTableQuery);
-	} catch (error) {}
+		console.log("connection pool created, musicMetaData table created");
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-initClient().catch(console.error);
+initClient();
 
 export { pool };
 
