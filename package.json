@@ -11,7 +11,7 @@
 	"scripts": {
 		"build": "remix vite:build",
 		"dev": "cross-env NODE_ENV=development node server/index.js",
-		"start": "cross-env NODE_ENV=production node server/index.js",
+		"start": "cross-env NODE_ENV=production PORT=8001 node server/index.js",
 		"format": "biome format --write",
 		"lint": "biome lint --write",
 		"check": "biome check --write",

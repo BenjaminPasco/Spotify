@@ -7,10 +7,23 @@ export const minioClient = new Client({
 	secretKey: "minioadmin",
 });
 
-export async function ensureBucketExists(bucketName: string) {
-	const exist = await minioClient.bucketExists(bucketName);
-	if (!exist) {
-		await minioClient.makeBucket(bucketName, "eu-west-1");
+export async function ensureBucketExists(
+	bucketName: string,
+): Promise<{ error?: string[] }> {
+	try {
+		const exist = await minioClient.bucketExists(bucketName);
+		if (!exist) {
+			await minioClient.makeBucket(bucketName, "eu-west-1");
+		}
+		return {};
+	} catch (error) {
+		return {
+			error: [
+				typeof error === "string"
+					? error
+					: "unknown error trying to check if bucket exist",
+			],
+		};
 	}
 }
 
@@ -27,17 +40,30 @@ export async function pushMusic({
 	size: number;
 	type: string;
 }): Promise<{
-	success: boolean;
 	uploadedObject: null | Awaited<ReturnType<typeof minioClient.putObject>>;
+	error?: string[];
 }> {
 	try {
-		await ensureBucketExists(bucket);
+		const { error } = await ensureBucketExists(bucket);
+		if (error) {
+			return {
+				uploadedObject: null,
+				error: ["error uploading file to object storage", ...error],
+			};
+		}
 		const result = await minioClient.putObject(bucket, fileName, buffer, size, {
 			"Content-Type": type,
 		});
-		return { success: true, uploadedObject: result };
+		return { uploadedObject: result };
 	} catch (error) {
-		return { success: false, uploadedObject: null };
+		return {
+			uploadedObject: null,
+			error: [
+				typeof error === "string"
+					? error
+					: "unknown error uploading file to object storage",
+			],
+		};
 	}
 }
 
