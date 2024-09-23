@@ -1,11 +1,12 @@
 import { Client } from "minio";
 export const minioClient = new Client({
-	endPoint: "localhost",
-	port: 9000,
+	endPoint: process.env.OBJ_STORE_ENDPOINT || "localhost",
+	port: Number(process.env.OBJ_STORE_PORT) || 9000,
 	useSSL: false,
-	accessKey: "minioadmin",
-	secretKey: "minioadmin",
+	accessKey: process.env.OBJ_STORE_ACCESS_KEY || "minioadmin",
+	secretKey: process.env.OBJ_STORE_SECRET_KEY || "minioadmin",
 });
+console.log("Minio client initialized");
 
 export async function ensureBucketExists(
 	bucketName: string,
