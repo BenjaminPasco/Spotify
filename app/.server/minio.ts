@@ -22,7 +22,8 @@ export async function ensureBucketExists(
 			error: [
 				typeof error === "string"
 					? error
-					: "unknown error trying to check if bucket exist",
+					: // : "unknown error trying to check if bucket exist",
+						(error as string),
 			],
 		};
 	}
