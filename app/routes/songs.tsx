@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import * as dbClient from "../clients/database";
-import * as minioClient from "../clients/minio";
+import * as dbClient from "../.server/database";
+import * as minioClient from "../.server/minio";
 
 export const loader = async (args: LoaderFunctionArgs) => {
 	const { rows } = await dbClient.getAllMusicMetadata();
