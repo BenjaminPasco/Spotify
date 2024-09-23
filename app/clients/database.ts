@@ -42,7 +42,8 @@ export async function createMusicMetadata({
 	title,
 	artist,
 }: MusicMetaData): Promise<{
-	success: boolean;
+	insertedMetaData: null | { id: string };
+	error?: string[];
 }> {
 	const createMusicMetadata = `
 		INSERT INTO musicMetaData (object_storage_id, title, artist)
@@ -58,11 +59,21 @@ export async function createMusicMetadata({
 			artist,
 		]);
 		if (!result.rows.at(0)?.id) {
-			throw "music metadata not inserted";
+			return {
+				insertedMetaData: null,
+				error: ["no row inserted in metadata table"],
+			};
 		}
-		return { success: true };
+		return { insertedMetaData: result.rows.at(0) || null };
 	} catch (error) {
-		return { success: false };
+		return {
+			insertedMetaData: null,
+			error: [
+				typeof error === "string"
+					? error
+					: "unknown error trying to insert file metadata",
+			],
+		};
 	} finally {
 		if (client !== null) {
 			client.release();
