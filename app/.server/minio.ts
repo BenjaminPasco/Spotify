@@ -5,6 +5,7 @@ export const minioClient = new Client({
 	useSSL: false,
 	accessKey: process.env.OBJ_STORE_ACCESS_KEY || "minioadmin",
 	secretKey: process.env.OBJ_STORE_SECRET_KEY || "minioadmin",
+	pathStyle: true,
 });
 console.log("Minio client initialized");
 
