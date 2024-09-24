@@ -11,9 +11,11 @@ export const loader = async (args: LoaderFunctionArgs) => {
 				bucket: "music",
 				objectStorageId: row.objectStorageId,
 			});
+			const url = new URL(link);
+			const path = url.pathname;
 			return {
 				...row,
-				link,
+				url: `http://spotify.benpas.local/minio/${path}`,
 			};
 		}),
 	);
@@ -28,7 +30,7 @@ export default function Songs() {
 				return (
 					<div key={music.objectStorageId}>
 						<audio controls>
-							<source src={music.link} type="audio/mpeg" />
+							<source src={music.url} type="audio/mpeg" />
 							<track kind="captions" srcLang="en" label="English" default />
 							Your Browser does not support the audio element.
 						</audio>
