@@ -1,9 +1,9 @@
 import pg from "pg";
 const { Pool } = pg;
 
-const dbUser = process.env.DB_USER || "user";
-const dbPassword = process.env.DB_PASSWORD || "password";
-const dbHost = process.env.DB_HOST || "127.0.0.1";
+const dbUser = process.env.DB_USER || "dbadmin";
+const dbPassword = process.env.DB_PASSWORD || "dbadmin";
+const dbHost = process.env.DB_HOST || "localhost";
 const dbPort = process.env.DB_PORT || 5432;
 const dbName = process.env.DB_NAME || "spotify";
 
