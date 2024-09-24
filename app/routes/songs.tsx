@@ -15,7 +15,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
 			const path = url.pathname;
 			return {
 				...row,
-				url: `http://spotify.benpas.local/minio/${path}`,
+				url: `http://spotify.benpas.local/minio${path}`,
 			};
 		}),
 	);
