@@ -4,26 +4,6 @@ import { minioClient } from "../.server/minio";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	invariant(params.id, "id is undefined");
-	// const readable = await minioClient.getObject("music", `${params.id}.mp3`);
-	// const stream = new ReadableStream({
-	// 	async start(controller) {
-	// 		readable.on("data", (chunk) => {
-	// 			controller.enqueue(chunk);
-	// 		});
-	// 		readable.on("end", () => {
-	// 			controller.close();
-	// 		});
-	// 		readable.on("error", (error) => {
-	// 			controller.error(error);
-	// 		});
-	// 	},
-	// });
-	// return new Response(stream, {
-	// 	headers: {
-	// 		"Content-Type": "audio/mpeg",
-	// 		"Cache-Control": "no-store",
-	// 	},
-	// });
 	const objectStat = await minioClient.statObject("music", `${params.id}.mp3`);
 	const fileSize = objectStat.size;
 	const rangeHeader = request.headers.get("Range");
