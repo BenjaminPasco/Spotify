@@ -10,7 +10,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 			return {
 				...row,
 				url: `${url.protocol}//${process.env.DOMAIN}/api/songs/${row.objectStorageId}`,
-				// url: `${url.protocol}//${url.hostname}:${url.port}/api/songs/${row.objectStorageId}`,
 			};
 		}),
 	);
