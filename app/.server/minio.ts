@@ -7,7 +7,7 @@ export const minioClient = new Client({
 	secretKey: process.env.MINIO_SECRET_KEY || "minioadmin",
 	pathStyle: true,
 });
-console.log("Minio client initialized", minioClient);
+console.log("Minio client initialized", !!minioClient);
 
 export async function ensureBucketExists(
 	bucketName: string,
