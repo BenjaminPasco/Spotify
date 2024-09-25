@@ -11,12 +11,12 @@ sourceMapSupport.install();
 // Initaliazing the Fastify backend
 const app = fastify({
 	logger: {
-		level: process.env.NODE_ENV ? "info" : "error",
+		level: "error",
 	},
 });
 await app.register(remixFastify);
-const host = process.env.HOST === "true" ? "0.0.0.0" : "127.0.0.1";
-const desiredPort = Number(process.env.PORT) || 3000;
+const host = process.env.DEV === "production" ? "0.0.0.0" : "127.0.0.1";
+const desiredPort = Number(process.env.PORT) || 8001;
 const portToUse = await getPort({
 	port: portNumbers(desiredPort, desiredPort + 100),
 });
