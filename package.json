@@ -65,10 +65,5 @@
 		"vite-tsconfig-paths": "^5.0.1",
 		"vitest": "^2.1.1"
 	},
-	"keywords": [
-		"react",
-		"remix",
-		"javascript",
-		"typescript"
-	]
+	"keywords": ["react", "remix", "javascript", "typescript"]
 }
