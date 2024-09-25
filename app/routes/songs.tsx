@@ -1,21 +1,15 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import * as dbClient from "../.server/database";
-import * as minioClient from "../.server/minio";
 
-export const loader = async (args: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const url = new URL(request.url);
 	const { rows } = await dbClient.getAllMusicMetadata();
 	const musics = await Promise.all(
-		rows.map(async (row) => {
-			const link = await minioClient.getMusicLink({
-				bucket: "music",
-				objectStorageId: row.objectStorageId,
-			});
-			const url = new URL(link);
-			const path = url.pathname;
+		rows.map((row) => {
 			return {
 				...row,
-				url: `http://spotify.benpas.local/minio${path}`,
+				url: `${url.protocol}//${url.hostname}:${url.port}/api/songs/${row.objectStorageId}`,
 			};
 		}),
 	);
