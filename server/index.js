@@ -11,7 +11,7 @@ sourceMapSupport.install();
 // Initaliazing the Fastify backend
 const app = fastify({
 	logger: {
-		level: "error",
+		level: process.env.NODE_ENV === "production" ? "trace" : "error",
 	},
 });
 await app.register(remixFastify);
