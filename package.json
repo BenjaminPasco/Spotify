@@ -10,8 +10,8 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "remix vite:build",
-		"dev": "cross-env NODE_ENV=development DOMAIN=127.0.0.1:8001 node server/index.js",
-		"start": "cross-env NODE_ENV=production PORTS=8001 node server/index.js",
+		"dev": "cross-env DOMAIN=127.0.0.1:8001 node server/index.js",
+		"start": "cross-env PORTS=8001 node server/index.js",
 		"format": "biome format --write",
 		"lint": "biome lint --write",
 		"check": "biome check --write",
