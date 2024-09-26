@@ -15,7 +15,7 @@ const app = fastify({
 	},
 });
 await app.register(remixFastify);
-const host = process.env.NODE_ENV === "prod" ? "0.0.0.0" : "127.0.0.1";
+const host = process.env.HOST === "true" ? "0.0.0.0" : "127.0.0.1";
 const desiredPort = Number(process.env.PORT) || 8001;
 const portToUse = await getPort({
 	port: portNumbers(desiredPort, desiredPort + 100),
