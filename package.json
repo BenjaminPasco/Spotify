@@ -20,6 +20,7 @@
 	"dependencies": {
 		"@mcansh/remix-fastify": "^3.4.0",
 		"@radix-ui/react-icons": "^1.3.0",
+		"@radix-ui/react-navigation-menu": "^1.2.0",
 		"@radix-ui/react-slot": "^1.1.0",
 		"@remix-run/node": "^2.12.0",
 		"@remix-run/react": "^2.12.0",
@@ -65,5 +66,10 @@
 		"vite-tsconfig-paths": "^5.0.1",
 		"vitest": "^2.1.1"
 	},
-	"keywords": ["react", "remix", "javascript", "typescript"]
+	"keywords": [
+		"react",
+		"remix",
+		"javascript",
+		"typescript"
+	]
 }
