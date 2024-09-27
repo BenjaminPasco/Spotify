@@ -46,10 +46,7 @@
 		"moduleResolution": "Bundler",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./app/*"],
-			"components/*": ["./components/*"],
-			"hooks/*": ["./hooks/*"],
-			"utils/*": ["./utils/*"]
+			"~/*": ["./app/*"]
 		},
 		"module": "ESNext"
 	}
