@@ -1,6 +1,6 @@
 import { Links, Meta, Outlet, Scripts } from "@remix-run/react";
+import Navbar from "./components/Navbar";
 import styles from "./tailwind.css?url";
-
 export function links() {
 	return [
 		{ rel: "stylesheet", href: styles },
@@ -17,6 +17,7 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
+				<Navbar />
 				<Outlet />
 				<Scripts />
 			</body>
