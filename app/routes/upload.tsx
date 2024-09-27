@@ -1,6 +1,6 @@
 import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { v4 as uuidv4 } from "uuid";
-import UploadForm from "~/components/UploadForm";
+import UploadForm from "../components/UploadForm";
 import * as dbClient from "../.server/database";
 import * as minioClient from "../.server/minio";
 
