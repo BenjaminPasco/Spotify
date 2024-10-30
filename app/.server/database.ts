@@ -1,4 +1,5 @@
 import pg from "pg";
+import invariant from "tiny-invariant";
 const { Pool } = pg;
 
 const dbUser = process.env.DB_USER || "dbadmin";
@@ -8,9 +9,14 @@ const dbPort = process.env.DB_PORT || 5432;
 const dbName = process.env.DB_NAME || "spotify";
 
 const connectionUrl = `postgres://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
-const pool = new Pool({
-	connectionString: connectionUrl,
-});
+let pool: pg.Pool | null = null;
+try {
+	pool = new Pool({
+		connectionString: connectionUrl,
+	});
+} catch (error) {
+	console.error("Db connection pool fail to initialized");
+}
 
 type DBMusicMetaData = {
 	object_storage_id: string;
@@ -34,6 +40,7 @@ async function initClient() {
 		)
 	`;
 	try {
+		invariant(pool !== null, "Db connection pool is not initialized");
 		await pool.connect();
 		await pool.query(createTableQuery);
 		console.log("connection pool created, musicMetaData table created");
@@ -61,6 +68,7 @@ export async function createMusicMetadata({
 	`;
 	let client: null | pg.PoolClient = null;
 	try {
+		invariant(pool !== null, "Db connection pool is not initialized");
 		client = await pool.connect();
 		const result = await client.query<{ id: string }>(createMusicMetadata, [
 			objectStorageId,
@@ -100,6 +108,7 @@ export async function getAllMusicMetadata(): Promise<{
 	`;
 	let client: null | pg.PoolClient = null;
 	try {
+		invariant(pool !== null, "Db connection pool is not initialized");
 		client = await pool.connect();
 		const result = await client.query<DBMusicMetaData>(getAllMusicDataQuery);
 		if (!result.rows) {

@@ -1,8 +1,8 @@
 import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { v4 as uuidv4 } from "uuid";
-import UploadForm from "~/components/UploadForm";
 import * as dbClient from "../.server/database";
 import * as minioClient from "../.server/minio";
+import UploadForm from "../components/UploadForm";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const actionError = "upload action failed";
