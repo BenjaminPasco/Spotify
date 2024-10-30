@@ -51,4 +51,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: bpasco/spotify:latest
+        tags: |
+          bpasco/spotify:latest
+          bpasco/spotify:${{ github.sha }}
+
