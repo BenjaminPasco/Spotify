@@ -19,6 +19,7 @@ try {
 }
 
 type DBMusicMetaData = {
+	id: string;
 	object_storage_id: string;
 	title: string;
 	artist?: string;
@@ -30,8 +31,18 @@ export type MusicMetaData = {
 	artist?: string;
 };
 
+type DBUser = {
+	id: string;
+	provider_id: string;
+};
+
+export type User = {
+	id: string;
+	providerId: string;
+};
+
 async function initClient() {
-	const createTableQuery = `
+	const createSongMetaDataTableQuery = `
 		CREATE TABLE IF NOT EXISTS musicMetaData (
 			id SERIAL PRIMARY KEY,
 			object_storage_id VARCHAR(100) NOT NULL,
@@ -39,10 +50,17 @@ async function initClient() {
 			artist VARCHAR(100)
 		)
 	`;
+	const createUserTableQuery = `
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			provider_id VARCHAR(100) NOT NULL
+		)
+	`;
 	try {
 		invariant(pool !== null, "Db connection pool is not initialized");
 		await pool.connect();
-		await pool.query(createTableQuery);
+		await pool.query(createSongMetaDataTableQuery);
+		await pool.query(createUserTableQuery);
 		console.log("connection pool created, musicMetaData table created");
 	} catch (error) {
 		console.error(error);
@@ -129,4 +147,113 @@ export async function getAllMusicMetadata(): Promise<{
 			client.release();
 		}
 	}
+}
+
+export async function createUser({
+	providerId,
+}: Pick<User, "providerId">): Promise<
+	{ createdUser: User; error: null } | { createdUser: null; error: string[] }
+> {
+	const createUser = `
+		INSERT INTO users (provider_id)
+		VALUES ($1)
+		RETURNING id, provider_id;
+	`;
+	let client: null | pg.PoolClient = null;
+	try {
+		invariant(pool !== null, "Db connection pool is not initialized");
+		client = await pool.connect();
+		const result = await client.query<DBUser>(createUser, [providerId]);
+		const insertedUser = result.rows[0];
+		invariant(insertedUser, "no row inserted in users table");
+		return {
+			createdUser: {
+				id: insertedUser.id,
+				providerId: insertedUser.provider_id,
+			},
+			error: null,
+		};
+	} catch (error) {
+		return {
+			createdUser: null,
+			error: ["createUser", String(error)],
+		};
+	} finally {
+		if (client !== null) {
+			client.release();
+		}
+	}
+}
+
+export async function getUser(query: Partial<User>): Promise<
+	| { user: User; error: null }
+	| {
+			user: null;
+			error: string[];
+	  }
+> {
+	const conditions = [];
+	const values = [];
+	if (query.id) {
+		values.push(query.id);
+		conditions.push(`id = $${values.length}`);
+	}
+	if (query.providerId) {
+		values.push(query.providerId);
+		conditions.push(`provider_id = $${values.length}`);
+	}
+	const getUserQuery = `
+		SELECT id, provider_id
+		FROM users
+		WHERE ${conditions.join(" AND ")}
+	`;
+	let client: null | pg.PoolClient = null;
+	try {
+		invariant(pool, "Db connection pool is not initialized");
+		client = await pool.connect();
+		const result = await client.query<DBUser>(getUserQuery, values);
+		if (!result.rows) {
+			throw "wrong result";
+		}
+		invariant(result.rows[0], "user not found");
+		return {
+			user: {
+				id: result.rows[0].id,
+				providerId: result.rows[0].provider_id,
+			},
+			error: null,
+		};
+	} catch (error) {
+		return { user: null, error: ["getUser", String(error)] };
+	} finally {
+		if (client !== null) {
+			client.release();
+		}
+	}
+}
+
+export async function findOrCreateUser({
+	id,
+}: { id: string }): Promise<
+	{ user: User; error: null } | { user: null; error: string[] }
+> {
+	const { user, error: errorGetUser } = await getUser({
+		providerId: id,
+	});
+	if (user) {
+		return { user, error: null };
+	}
+	if (errorGetUser[1] !== "Error: Invariant failed: user not found") {
+		return {
+			user: null,
+			error: errorGetUser,
+		};
+	}
+	const { createdUser, error: createUserError } = await createUser({
+		providerId: id,
+	});
+	if (createUserError) {
+		return { user: null, error: createUserError };
+	}
+	return { user: createdUser, error: null };
 }

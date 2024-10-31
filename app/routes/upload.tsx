@@ -1,5 +1,16 @@
-import { type ActionFunctionArgs, json } from "@remix-run/node";
+import {
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	json,
+	redirect,
+} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { JwtPayload } from "jsonwebtoken";
+import invariant from "tiny-invariant";
 import { v4 as uuidv4 } from "uuid";
+import { authenticate } from "~/.server/auth";
+import { accessTokenCookie, refreshTokenCookie } from "~/.server/cookies";
+import { verifyAccessToken, verifyRefreshToken } from "~/.server/jwt";
 import * as dbClient from "../.server/database";
 import * as minioClient from "../.server/minio";
 import UploadForm from "../components/UploadForm";
@@ -51,6 +62,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		});
 	}
 };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+	const { authenticated, headers } = await authenticate(request);
+	if (!authenticated) {
+		return redirect("/auth");
+	}
+	return json({}, { headers });
+}
 
 export default function Upload() {
 	return <UploadForm />;
